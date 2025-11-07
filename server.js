@@ -7,7 +7,7 @@ const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://your-connection-string';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/amplify';
 
 // MongoDB Connection
 mongoose.connect(MONGODB_URI)
@@ -318,20 +318,24 @@ app.get('/admin/login', (req, res) => {
 // Admin login POST
 app.post('/admin/login', async (req, res) => {
   const { username, password } = req.body;
-  const users = await readUsers();
   
-  const user = users.find(u => u.username === username);
-  
-  if (user && await bcrypt.compare(password, user.password)) {
-    req.session.isAuthenticated = true;
-    req.session.user = {
-      id: user.id,
-      username: user.username,
-      role: user.role
-    };
-    res.redirect('/admin');
-  } else {
-    res.render('admin-login', { error: 'Invalid credentials' });
+  try {
+    const user = await User.findOne({ username });
+    
+    if (user && await bcrypt.compare(password, user.password)) {
+      req.session.isAuthenticated = true;
+      req.session.user = {
+        id: user._id.toString(),
+        username: user.username,
+        role: user.role
+      };
+      res.redirect('/admin');
+    } else {
+      res.render('admin-login', { error: 'Invalid credentials' });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    res.render('admin-login', { error: 'An error occurred. Please try again.' });
   }
 });
 
@@ -355,15 +359,20 @@ app.get('/admin/users', isAuthenticated, async (req, res) => {
   if (req.session.user.role !== 'admin') {
     return res.status(403).send('Access denied. Admin role required.');
   }
-  const users = await readUsers();
-  // Don't send passwords to the frontend
-  const safeUsers = users.map(u => ({
-    id: u.id,
-    username: u.username,
-    role: u.role,
-    createdAt: u.createdAt
-  }));
-  res.render('admin-users', { users: safeUsers, user: req.session.user });
+  
+  try {
+    const users = await User.find({}).select('-password').lean();
+    res.render('admin-users', { 
+      users: users.map(u => ({
+        ...u,
+        id: u._id.toString()
+      })), 
+      user: req.session.user 
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).send('Error loading users');
+  }
 });
 
 // API: Get users
@@ -371,14 +380,17 @@ app.get('/api/users', isAuthenticated, async (req, res) => {
   if (req.session.user.role !== 'admin') {
     return res.status(403).json({ success: false, message: 'Access denied' });
   }
-  const users = await readUsers();
-  const safeUsers = users.map(u => ({
-    id: u.id,
-    username: u.username,
-    role: u.role,
-    createdAt: u.createdAt
-  }));
-  res.json(safeUsers);
+  
+  try {
+    const users = await User.find({}).select('-password').lean();
+    res.json(users.map(u => ({
+      ...u,
+      id: u._id.toString()
+    })));
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ success: false, message: 'Error fetching users' });
+  }
 });
 
 // API: Create user
@@ -393,36 +405,32 @@ app.post('/api/users', isAuthenticated, async (req, res) => {
     return res.status(400).json({ success: false, message: 'All fields are required' });
   }
   
-  const users = await readUsers();
-  
-  // Check if username already exists
-  if (users.find(u => u.username === username)) {
-    return res.status(400).json({ success: false, message: 'Username already exists' });
-  }
-  
-  const newUser = {
-    id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
-    username,
-    password: await bcrypt.hash(password, 10),
-    role,
-    createdAt: new Date().toISOString()
-  };
-  
-  users.push(newUser);
-  const success = await writeUsers(users);
-  
-  if (success) {
+  try {
+    // Check if username already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
+      username,
+      password: hashedPassword,
+      role
+    });
+    
     res.json({ 
       success: true, 
       message: 'User created successfully',
       user: {
-        id: newUser.id,
+        id: newUser._id.toString(),
         username: newUser.username,
         role: newUser.role,
         createdAt: newUser.createdAt
       }
     });
-  } else {
+  } catch (error) {
+    console.error('Error creating user:', error);
     res.status(500).json({ success: false, message: 'Failed to create user' });
   }
 });
@@ -433,46 +441,47 @@ app.put('/api/users/:id', isAuthenticated, async (req, res) => {
     return res.status(403).json({ success: false, message: 'Access denied' });
   }
   
-  const userId = parseInt(req.params.id);
+  const userId = req.params.id;
   const { username, password, role } = req.body;
   
-  const users = await readUsers();
-  const userIndex = users.findIndex(u => u.id === userId);
-  
-  if (userIndex === -1) {
-    return res.status(404).json({ success: false, message: 'User not found' });
-  }
-  
-  // Check if new username conflicts with another user
-  if (username && username !== users[userIndex].username) {
-    if (users.find(u => u.username === username && u.id !== userId)) {
-      return res.status(400).json({ success: false, message: 'Username already exists' });
+  try {
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
-    users[userIndex].username = username;
-  }
-  
-  if (password) {
-    users[userIndex].password = await bcrypt.hash(password, 10);
-  }
-  
-  if (role) {
-    users[userIndex].role = role;
-  }
-  
-  const success = await writeUsers(users);
-  
-  if (success) {
+    
+    // Check if new username conflicts with another user
+    if (username && username !== user.username) {
+      const existingUser = await User.findOne({ username, _id: { $ne: userId } });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: 'Username already exists' });
+      }
+      user.username = username;
+    }
+    
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+    
+    if (role) {
+      user.role = role;
+    }
+    
+    await user.save();
+    
     res.json({ 
       success: true, 
       message: 'User updated successfully',
       user: {
-        id: users[userIndex].id,
-        username: users[userIndex].username,
-        role: users[userIndex].role,
-        createdAt: users[userIndex].createdAt
+        id: user._id.toString(),
+        username: user.username,
+        role: user.role,
+        createdAt: user.createdAt
       }
     });
-  } else {
+  } catch (error) {
+    console.error('Error updating user:', error);
     res.status(500).json({ success: false, message: 'Failed to update user' });
   }
 });
@@ -483,25 +492,23 @@ app.delete('/api/users/:id', isAuthenticated, async (req, res) => {
     return res.status(403).json({ success: false, message: 'Access denied' });
   }
   
-  const userId = parseInt(req.params.id);
+  const userId = req.params.id;
   
   // Prevent deleting yourself
   if (userId === req.session.user.id) {
     return res.status(400).json({ success: false, message: 'Cannot delete your own account' });
   }
   
-  const users = await readUsers();
-  const filteredUsers = users.filter(u => u.id !== userId);
-  
-  if (filteredUsers.length === users.length) {
-    return res.status(404).json({ success: false, message: 'User not found' });
-  }
-  
-  const success = await writeUsers(filteredUsers);
-  
-  if (success) {
+  try {
+    const result = await User.findByIdAndDelete(userId);
+    
+    if (!result) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
     res.json({ success: true, message: 'User deleted successfully' });
-  } else {
+  } catch (error) {
+    console.error('Error deleting user:', error);
     res.status(500).json({ success: false, message: 'Failed to delete user' });
   }
 });
@@ -524,8 +531,9 @@ app.post('/api/content', isAuthenticated, async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Admin panel: http://localhost:${PORT}/admin/login`);
-  console.log(`Default credentials - Username: admin, Password: admin123`);
-  console.log(`User management: http://localhost:${PORT}/admin/users`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📊 Admin panel: http://localhost:${PORT}/admin/login`);
+  console.log(`👥 User management: http://localhost:${PORT}/admin/users`);
+  console.log(`💾 Database: ${MONGODB_URI}`);
+  console.log(`🔑 Default credentials - Username: admin, Password: admin123`);
 });

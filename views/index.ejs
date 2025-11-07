@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amplify Communities - <%= lang === 'en' ? 'Empowering Futures' : 'Autonomiser les Avenirs' %></title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    colors: {
+                        'brand-purple': {
+                            '50': '#f5f3ff', '100': '#ede9fe', '200': '#ddd6fe', '300': '#c4b5fd',
+                            '400': '#a78bfa', '500': '#8b5cf6', '600': '#7c3aed', '700': '#6d28d9',
+                            '800': '#5b21b6', '900': '#4c1d95',
+                        },
+                        'brand-green': {
+                            '50': '#ecfdf5', '100': '#d1fae5', '200': '#a7f3d0', '300': '#6ee7b7',
+                            '400': '#34d399', '500': '#10b981', '600': '#059669', '700': '#047857',
+                            '800': '#065f46', '900': '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        #hero-canvas { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        :focus-visible { outline: 2px solid #7c3aed; outline-offset: 2px; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+    <% const t = content[lang]; %>
+
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 w-full border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="?lang=<%= lang %>" class="flex-shrink-0 flex items-center" aria-label="Amplify Communities Home">
+                    <span class="text-2xl font-bold text-brand-purple-700">Amplify</span>
+                </a>
+                
+                <nav class="hidden md:flex md:items-center md:space-x-8">
+                    <a href="#about" class="font-medium text-gray-600 hover:text-brand-purple-600 transition-colors"><%= t.nav.about %></a>
+                    <a href="#initiatives" class="font-medium text-gray-600 hover:text-brand-purple-600 transition-colors"><%= t.nav.initiatives %></a>
+                    <a href="#contact" class="font-medium text-gray-600 hover:text-brand-purple-600 transition-colors"><%= t.nav.contact %></a>
+                </nav>
+                
+                <div class="flex items-center space-x-3">
+                    <!-- Language Switcher -->
+                    <a href="?lang=<%= lang === 'en' ? 'fr' : 'en' %>" 
+                       class="px-3 py-1 text-sm font-medium text-brand-purple-700 hover:bg-brand-purple-50 rounded-md transition-colors">
+                        <%= lang === 'en' ? 'FR' : 'EN' %>
+                    </a>
+                    
+                    <a href="#" class="hidden md:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-brand-green-500 hover:bg-brand-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green-500 transition-all">
+                        <%= t.nav.donate %>
+                    </a>
+                    
+                    <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg id="menu-open-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="menu-close-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="text-gray-600 hover:bg-gray-50 hover:text-brand-purple-600 block px-3 py-2 rounded-lg text-base font-medium"><%= t.nav.about %></a>
+                <a href="#initiatives" class="text-gray-600 hover:bg-gray-50 hover:text-brand-purple-600 block px-3 py-2 rounded-lg text-base font-medium"><%= t.nav.initiatives %></a>
+                <a href="#contact" class="text-gray-600 hover:bg-gray-50 hover:text-brand-purple-600 block px-3 py-2 rounded-lg text-base font-medium"><%= t.nav.contact %></a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="px-5">
+                    <a href="#" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-brand-green-500 hover:bg-brand-green-600">
+                        <%= t.nav.donate %>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="relative min-h-[80vh] flex items-center overflow-hidden bg-brand-purple-50">
+            <canvas id="hero-canvas"></canvas>
+            
+            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                    <span class="block xl:inline"><%= t.hero.title1 %></span>
+                    <span class="block text-brand-purple-700 xl:inline"><%= t.hero.title2 %></span>
+                </h1>
+                <p class="mt-3 max-w-md mx-auto text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                    <%= t.hero.description %>
+                </p>
+                <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+                    <div class="rounded-lg shadow">
+                        <a href="#about" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-purple-600 hover:bg-brand-purple-700 md:py-4 md:text-lg md:px-10 transition-all">
+                            <%= t.hero.learnMore %>
+                        </a>
+                    </div>
+                    <div class="mt-3 rounded-lg shadow sm:mt-0 sm:ml-3">
+                        <a href="#contact" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-brand-purple-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition-all">
+                            <%= t.hero.getInvolved %>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                            <%= t.about.title %>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-600"><%= t.about.paragraph1 %></p>
+                        <p class="mt-4 text-lg text-gray-600"><%= t.about.paragraph2 %></p>
+                    </div>
+                    <div class="mt-10 lg:mt-0">
+                        <img class="rounded-xl shadow-lg w-full h-full object-cover" 
+                             src="https://placehold.co/600x400/F5F3FF/7C3AED?text=Our+Community" 
+                             alt="Community gathering">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="initiatives" class="py-16 sm:py-24 bg-brand-green-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                        <%= t.initiatives.title %>
+                    </h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                        <%= t.initiatives.subtitle %>
+                    </p>
+                </div>
+
+                <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <% t.initiatives.cards.forEach((card, index) => { %>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center justify-center h-12 w-12 rounded-lg bg-brand-purple-100 text-brand-purple-700">
+                                <% if (index === 0) { %>
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                                </svg>
+                                <% } else if (index === 1) { %>
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.25 14.15v4.007a3 3 0 01-3 3H6.75a3 3 0 01-3-3V14.15M18 18.15V10.75a3 3 0 00-3-3H9a3 3 0 00-3 3v7.4M15 13.5h.008v.008H15v-.008zM12 13.5h.008v.008H12v-.008zM9 13.5h.008v.008H9v-.008zM12 15a.75.75 0 00.75-.75V12a.75.75 0 00-1.5 0v2.25A.75.75 0 0012 15z" />
+                                </svg>
+                                <% } else { %>
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                                <% } %>
+                            </span>
+                        </div>
+                        <h3 class="mt-4 text-xl font-semibold text-gray-900"><%= card.title %></h3>
+                        <p class="mt-2 text-base text-gray-600"><%= card.description %></p>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 sm:py-24 bg-white overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-5">
+                        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                            <%= t.contact.title %>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-600"><%= t.contact.description %></p>
+                        <div class="mt-8 space-y-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-brand-purple-100 text-brand-purple-700">
+                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                </div>
+                                <p class="ml-4 text-base text-gray-600"><%- t.contact.address %></p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-brand-purple-100 text-brand-purple-700">
+                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.625a2.25 2.25 0 01-2.36 0l-7.5-4.625A2.25 2.25 0 013 6.993V6.75" />
+                                    </svg>
+                                </div>
+                                <p class="ml-4 text-base text-gray-600"><%= t.contact.email %></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-7 mt-12 lg:mt-0">
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700"><%= t.contact.form.name %></label>
+                                <input type="text" name="name" id="name" required class="mt-1 py-3 px-4 block w-full shadow-sm rounded-lg border-gray-300">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700"><%= t.contact.form.email %></label>
+                                <input id="email" name="email" type="email" required class="mt-1 py-3 px-4 block w-full shadow-sm rounded-lg border-gray-300">
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700"><%= t.contact.form.subject %></label>
+                                <input type="text" name="subject" id="subject" required class="mt-1 py-3 px-4 block w-full shadow-sm rounded-lg border-gray-300">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700"><%= t.contact.form.message %></label>
+                                <textarea id="message" name="message" rows="4" required class="mt-1 py-3 px-4 block w-full shadow-sm rounded-lg border-gray-300"></textarea>
+                            </div>
+                            <button type="submit" class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-brand-green-500 hover:bg-brand-green-600 transition-all">
+                                <%= t.contact.form.submit %>
+                            </button>
+                        </form>
+                        <div id="form-success" class="hidden mt-4 p-4 rounded-lg bg-brand-green-50 text-brand-green-700">
+                            <%= t.contact.form.success %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800">
+        <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center space-x-6 md:order-2">
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <span class="sr-only">Facebook</span>
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.772-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2.066c-4.1.063-4.611.21-6.166.86C4.463 3.62 3.62 4.463 2.924 6.018c-.65 1.554-.797 2.066-.86 6.166-.063 4.1.21 4.611.86 6.166.702 1.554 1.548 2.398 3.102 3.102 1.554.65 2.066.797 6.166.86 4.1.063 4.611-.21 6.166-.86 1.554-.702 2.398-1.548 3.102-3.102.65-1.554.797-2.066.86-6.166.063-4.1-.21-4.611-.86-6.166-.702-1.554-1.548-2.398-3.102-3.102-1.554-.65-2.066-.797-6.166-.86zM12 18.253a6.253 6.253 0 110-12.506 6.253 6.253 0 010 12.506zM12 16.12a4.12 4.12 0 100-8.24 4.12 4.12 0 000 8.24z" clip-rule="evenodd" /><path d="M18.89 7.39a1.53 1.53 0 100-3.06 1.53 1.53 0 000 3.06z" /></svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <span class="sr-only">Twitter</span>
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.107 4.107 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                    </a>
+                </div>
+                <div class="mt-8 md:mt-0 md:order-1">
+                    <p class="text-center text-base text-gray-400"><%= t.footer.copyright %></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Canvas animation code
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('hero-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particlesArray = [];
+                
+                const shellDotColors = ['#ffffff', '#ddd6fe', '#a7f3d0', '#fed7aa'];
+                const simpleDotColors = ['#ddd6fe', '#a7f3d0'];
+                
+                let mouse = {
+                    x: null,
+                    y: null,
+                    radius: 150
+                };
+
+                window.addEventListener('mousemove', (event) => {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = event.clientX;
+                    mouse.y = event.clientY;
+                });
+                
+                window.addEventListener('mouseout', () => {
+                    mouse.x = null;
+                    mouse.y = null;
+                });
+
+                class Particle {
+                    constructor(x, y, directionX, directionY, size, color, type) { 
+                        this.x = x;
+                        this.y = y;
+                        this.directionX = directionX;
+                        this.directionY = directionY;
+                        this.size = size;
+                        this.color = color; 
+                        this.type = type;   
+                        this.baseSize = size;
+                        
+                        this.dotPositions = [];
+                        if (this.type === 'shell' && this.color !== '#ffffff') {
+                            for (let i = 0; i < 3; i++) {
+                                this.dotPositions.push({
+                                    x: (Math.random() - 0.5) * this.size * 2.5,
+                                    y: (Math.random() - 0.5) * this.size * 3.0,
+                                    s: (Math.random() * 0.3 + 0.2) * this.size
+                                });
+                            }
+                        }
+                    }
+
+                    draw() {
+                        if (this.type === 'shell') {
+                            ctx.beginPath();
+                            ctx.ellipse(this.x, this.y, this.size * 1.5, this.size * 2, 0, 0, Math.PI * 2);
+                            ctx.fillStyle = 'white';
+                            ctx.strokeStyle = '#e2e8f0'; 
+                            ctx.lineWidth = 0.5;
+                            ctx.fill();
+                            ctx.stroke();
+
+                            if (this.color !== '#ffffff') {
+                                ctx.fillStyle = this.color;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.ellipse(this.x, this.y, this.size * 1.5, this.size * 2, 0, 0, Math.PI * 2);
+                                ctx.clip();
+                                
+                                for (const pos of this.dotPositions) {
+                                    ctx.beginPath();
+                                    ctx.arc(this.x + pos.x, this.y + pos.y, pos.s, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                                ctx.restore(); 
+                            }
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(this.x, this.y - this.size * 1.8);
+                            ctx.quadraticCurveTo(this.x + this.size * 0.5, this.y, this.x, this.y + this.size * 1.8);
+                            ctx.strokeStyle = '#d1d5db'; 
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        } else {
+                            ctx.beginPath();
+                            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                            ctx.fillStyle = this.color;
+                            ctx.fill();
+                        }
+                    }
+
+                    update() {
+                        if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                            this.directionX = -this.directionX;
+                        }
+                        if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                            this.directionY = -this.directionY;
+                        }
+
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < mouse.radius && mouse.x !== null) {
+                            if (this.size < this.baseSize + 3) {
+                                this.size += 0.5;
+                            }
+                            this.x -= this.directionX * 0.5;
+                            this.y -= this.directionY * 0.5;
+                        } else {
+                            if (this.size > this.baseSize) {
+                                this.size -= 0.1;
+                            }
+                        }
+
+                        this.x += this.directionX;
+                        this.y += this.directionY;
+                        this.draw();
+                    }
+                }
+
+                function init() {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                    particlesArray = [];
+                    let numParticles = (canvas.height * canvas.width) / 8000;
+                    if (numParticles > 180) numParticles = 180;
+
+                    for (let i = 0; i < numParticles; i++) {
+                        let size;
+                        let x = Math.random() * (canvas.width - 6) + 3;
+                        let y = Math.random() * (canvas.height - 6) + 3;
+                        let directionX = (Math.random() * 0.4) - 0.2; 
+                        let directionY = (Math.random() * 0.4) - 0.2;
+                        
+                        let particleType = Math.random() > 0.6 ? 'shell' : 'dot';
+                        let color;
+
+                        if (particleType === 'shell') {
+                            size = (Math.random() * 2) + 1.5;
+                            color = shellDotColors[Math.floor(Math.random() * shellDotColors.length)];
+                        } else {
+                            size = (Math.random() * 2) + 2;
+                            color = simpleDotColors[Math.floor(Math.random() * simpleDotColors.length)];
+                        }
+                        
+                        particlesArray.push(new Particle(x, y, directionX, directionY, size, color, particleType));
+                    }
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                    }
+                }
+
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        init();
+                    }, 250);
+                });
+
+                init();
+                animate();
+            }
+        });
+
+        // Mobile menu toggle
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const openIcon = document.getElementById('menu-open-icon');
+        const closeIcon = document.getElementById('menu-close-icon');
+
+        if (menuButton) {
+            menuButton.addEventListener('click', () => {
+                const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+                menuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                openIcon.classList.toggle('hidden');
+                openIcon.classList.toggle('block');
+                closeIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('block');
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuButton.setAttribute('aria-expanded', 'false');
+                    mobileMenu.classList.add('hidden');
+                    openIcon.classList.remove('hidden');
+                    openIcon.classList.add('block');
+                    closeIcon.classList.add('hidden');
+                    closeIcon.classList.remove('block');
+                });
+            });
+        }
+
+        // Contact form
+        const contactForm = document.getElementById('contact-form');
+        const formSuccessMessage = document.getElementById('form-success');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                contactForm.reset();
+                formSuccessMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    formSuccessMessage.classList.add('hidden');
+                }, 5000);
+            });
+        }
+    </script>
+</body>
+</html>

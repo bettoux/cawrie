@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Amplify</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">Amplify Admin Panel</h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600">Welcome, <strong><%= user.username %></strong></span>
+                        <a href="/" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">
+                            View Website
+                        </a>
+                        <% if (user.role === 'admin') { %>
+                        <a href="/admin/users" class="text-sm text-purple-600 hover:text-purple-700 font-medium">
+                            User Management
+                        </a>
+                        <% } %>
+                        <a href="/admin/logout" class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Language Tabs -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="border-b border-gray-200">
+                    <nav class="flex -mb-px">
+                        <button onclick="switchLanguage('en')" 
+                                class="language-tab active px-6 py-4 text-sm font-medium border-b-2 border-purple-600 text-purple-600">
+                            English
+                        </button>
+                        <button onclick="switchLanguage('fr')" 
+                                class="language-tab px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Français
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" class="hidden mb-6 rounded-md bg-green-50 p-4">
+                <div class="flex">
+                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="ml-3 text-sm font-medium text-green-800">Content updated successfully!</p>
+                </div>
+            </div>
+
+            <!-- Content Form -->
+            <form id="content-form" class="space-y-6">
+                <!-- English Content -->
+                <div id="content-en" class="tab-content active space-y-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Navigation</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">About Us</label>
+                                <input type="text" name="en.nav.about" value="<%= content.en.nav.about %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Initiatives</label>
+                                <input type="text" name="en.nav.initiatives" value="<%= content.en.nav.initiatives %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+                                <input type="text" name="en.nav.contact" value="<%= content.en.nav.contact %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Donate</label>
+                                <input type="text" name="en.nav.donate" value="<%= content.en.nav.donate %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Hero Section</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Title Line 1</label>
+                                <input type="text" name="en.hero.title1" value="<%= content.en.hero.title1 %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Title Line 2</label>
+                                <input type="text" name="en.hero.title2" value="<%= content.en.hero.title2 %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea name="en.hero.description" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.hero.description %></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Learn More Button</label>
+                                    <input type="text" name="en.hero.learnMore" value="<%= content.en.hero.learnMore %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Get Involved Button</label>
+                                    <input type="text" name="en.hero.getInvolved" value="<%= content.en.hero.getInvolved %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">About Section</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                <input type="text" name="en.about.title" value="<%= content.en.about.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraph 1</label>
+                                <textarea name="en.about.paragraph1" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.about.paragraph1 %></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraph 2</label>
+                                <textarea name="en.about.paragraph2" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.about.paragraph2 %></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Initiatives Section</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                <input type="text" name="en.initiatives.title" value="<%= content.en.initiatives.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+                                <input type="text" name="en.initiatives.subtitle" value="<%= content.en.initiatives.subtitle %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            
+                            <% content.en.initiatives.cards.forEach((card, index) => { %>
+                            <div class="border-t pt-4 mt-4">
+                                <h3 class="font-medium text-gray-900 mb-3">Initiative <%= index + 1 %></h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                        <input type="text" name="en.initiatives.cards[<%= index %>].title" value="<%= card.title %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                        <textarea name="en.initiatives.cards[<%= index %>].description" rows="2" 
+                                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= card.description %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Contact Section</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                <input type="text" name="en.contact.title" value="<%= content.en.contact.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea name="en.contact.description" rows="2" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.contact.description %></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                    <textarea name="en.contact.address" rows="2" 
+                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.contact.address %></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" name="en.contact.email" value="<%= content.en.contact.email %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                            </div>
+                            <div class="border-t pt-4 mt-4">
+                                <h3 class="font-medium text-gray-900 mb-3">Form Labels</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Name Label</label>
+                                        <input type="text" name="en.contact.form.name" value="<%= content.en.contact.form.name %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Label</label>
+                                        <input type="text" name="en.contact.form.email" value="<%= content.en.contact.form.email %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Subject Label</label>
+                                        <input type="text" name="en.contact.form.subject" value="<%= content.en.contact.form.subject %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Message Label</label>
+                                        <input type="text" name="en.contact.form.message" value="<%= content.en.contact.form.message %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Submit Button</label>
+                                        <input type="text" name="en.contact.form.submit" value="<%= content.en.contact.form.submit %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Success Message</label>
+                                        <input type="text" name="en.contact.form.success" value="<%= content.en.contact.form.success %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Footer</h2>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Copyright</label>
+                            <input type="text" name="en.footer.copyright" value="<%= content.en.footer.copyright %>" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- French Content (Similar structure) -->
+                <div id="content-fr" class="tab-content space-y-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Navigation</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">À Propos</label>
+                                <input type="text" name="fr.nav.about" value="<%= content.fr.nav.about %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Initiatives</label>
+                                <input type="text" name="fr.nav.initiatives" value="<%= content.fr.nav.initiatives %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+                                <input type="text" name="fr.nav.contact" value="<%= content.fr.nav.contact %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Faire un Don</label>
+                                <input type="text" name="fr.nav.donate" value="<%= content.fr.nav.donate %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Section Héro</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Titre Ligne 1</label>
+                                <input type="text" name="fr.hero.title1" value="<%= content.fr.hero.title1 %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Titre Ligne 2</label>
+                                <input type="text" name="fr.hero.title2" value="<%= content.fr.hero.title2 %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea name="fr.hero.description" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.hero.description %></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Bouton En Savoir Plus</label>
+                                    <input type="text" name="fr.hero.learnMore" value="<%= content.fr.hero.learnMore %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Bouton S'Impliquer</label>
+                                    <input type="text" name="fr.hero.getInvolved" value="<%= content.fr.hero.getInvolved %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Section À Propos</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                                <input type="text" name="fr.about.title" value="<%= content.fr.about.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraphe 1</label>
+                                <textarea name="fr.about.paragraph1" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.about.paragraph1 %></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraphe 2</label>
+                                <textarea name="fr.about.paragraph2" rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.about.paragraph2 %></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Section Initiatives</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                                <input type="text" name="fr.initiatives.title" value="<%= content.fr.initiatives.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre</label>
+                                <input type="text" name="fr.initiatives.subtitle" value="<%= content.fr.initiatives.subtitle %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            
+                            <% content.fr.initiatives.cards.forEach((card, index) => { %>
+                            <div class="border-t pt-4 mt-4">
+                                <h3 class="font-medium text-gray-900 mb-3">Initiative <%= index + 1 %></h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                                        <input type="text" name="fr.initiatives.cards[<%= index %>].title" value="<%= card.title %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                        <textarea name="fr.initiatives.cards[<%= index %>].description" rows="2" 
+                                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= card.description %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Section Contact</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                                <input type="text" name="fr.contact.title" value="<%= content.fr.contact.title %>" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea name="fr.contact.description" rows="2" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.contact.description %></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                                    <textarea name="fr.contact.address" rows="2" 
+                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.contact.address %></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Courriel</label>
+                                    <input type="email" name="fr.contact.email" value="<%= content.fr.contact.email %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                            </div>
+                            <div class="border-t pt-4 mt-4">
+                                <h3 class="font-medium text-gray-900 mb-3">Étiquettes du Formulaire</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Étiquette Nom</label>
+                                        <input type="text" name="fr.contact.form.name" value="<%= content.fr.contact.form.name %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Étiquette Courriel</label>
+                                        <input type="text" name="fr.contact.form.email" value="<%= content.fr.contact.form.email %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Étiquette Sujet</label>
+                                        <input type="text" name="fr.contact.form.subject" value="<%= content.fr.contact.form.subject %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Étiquette Message</label>
+                                        <input type="text" name="fr.contact.form.message" value="<%= content.fr.contact.form.message %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Bouton Envoyer</label>
+                                        <input type="text" name="fr.contact.form.submit" value="<%= content.fr.contact.form.submit %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Message de Succès</label>
+                                        <input type="text" name="fr.contact.form.success" value="<%= content.fr.contact.form.success %>" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Pied de Page</h2>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Droits d'Auteur</label>
+                            <input type="text" name="fr.footer.copyright" value="<%= content.fr.footer.copyright %>" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="window.location.reload()" 
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        function switchLanguage(lang) {
+            document.querySelectorAll('.language-tab').forEach(tab => {
+                tab.classList.remove('active', 'border-purple-600', 'text-purple-600');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            event.target.classList.add('active', 'border-purple-600', 'text-purple-600');
+            event.target.classList.remove('border-transparent', 'text-gray-500');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById('content-' + lang).classList.add('active');
+        }
+
+        document.getElementById('content-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = { en: {}, fr: {} };
+            
+            // Helper function to set nested value
+            function setNestedValue(obj, path, value) {
+                const keys = path.split('.');
+                let current = obj;
+                
+                for (let i = 0; i < keys.length - 1; i++) {
+                    let key = keys[i];
+                    
+                    // Check if this is an array index pattern like "cards[0]"
+                    const arrayMatch = key.match(/^(.+)\[(\d+)\]$/);
+                    
+                    if (arrayMatch) {
+                        const [, arrayName, index] = arrayMatch;
+                        if (!current[arrayName]) current[arrayName] = [];
+                        if (!current[arrayName][index]) current[arrayName][index] = {};
+                        current = current[arrayName][index];
+                    } else {
+                        if (!current[key]) current[key] = {};
+                        current = current[key];
+                    }
+                }
+                
+                // Set the final value
+                const lastKey = keys[keys.length - 1];
+                current[lastKey] = value;
+            }
+            
+            // Process all form fields
+            formData.forEach((value, key) => {
+                setNestedValue(data, key, value);
+            });
+            
+            try {
+                const response = await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const successMsg = document.getElementById('success-message');
+                    successMsg.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    setTimeout(() => {
+                        successMsg.classList.add('hidden');
+                    }, 5000);
+                } else {
+                    alert('Failed to save changes: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error saving changes: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,7 +7,7 @@ const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/amplify';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sonnybettara_db_user:ojb8SH9VLIejQYYH@cluster0.ozgcwlr.mongodb.net/amplify?retryWrites=true&w=majority&appName=Cluster0';
 
 // MongoDB Connection
 mongoose.connect(MONGODB_URI)

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password": "$2a$10$IGm0jWx5KA3jcqIQQksiHuQuR8hMO2Qe8ZUOkvIwDc7.I.lLAyB4.",
+    "role": "admin",
+    "createdAt": "2025-11-06T20:09:39.654Z"
+  },
+  {
+    "id": 2,
+    "username": "bettara",
+    "password": "$2a$10$EC8vDROvu4GZrWB84B3GA.qRQYdBqb6rF11vpAW7rcs0YCyE6Qxf.",
+    "role": "editor",
+    "createdAt": "2025-11-06T20:10:08.777Z"
+  },
+  {
+    "id": 3,
+    "username": "sara",
+    "password": "$2a$10$zCMGSc7InPwZCOM7Aep/wOzXRSgOgRMFB9K2OpVYBsOuAjkc9o24u",
+    "role": "editor",
+    "createdAt": "2025-11-06T20:10:34.198Z"
+  }
+]

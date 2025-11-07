@@ -1,0 +1,112 @@
+{
+  "en": {
+    "nav": {
+      "about": "About Us",
+      "initiatives": "Initiatives",
+      "contact": "Contact",
+      "donate": "Donate Now Cash Please"
+    },
+    "hero": {
+      "title1": "Empowering Futures,",
+      "title2": "Building Equity.",
+      "description": "Amplify is dedicated to the cultural, educational, and economic advancement of Black communities through direct support and strategic partnerships.",
+      "learnMore": "Learn More",
+      "getInvolved": "Get Involved"
+    },
+    "about": {
+      "title": "Our Mission",
+      "paragraph1": "We believe in a world where every individual has the opportunity to thrive. Our organization was founded on the principles of equity, justice, and community. We work tirelessly to dismantle systemic barriers and create tangible pathways for success.",
+      "paragraph2": "Through a combination of grassroots action, policy advocacy, and community-led programs, we are amplifying the voices that need to be heard and investing in the change-makers of tomorrow."
+    },
+    "initiatives": {
+      "title": "Current Initiatives",
+      "subtitle": "We focus our efforts on three core pillars to create lasting impact.",
+      "cards": [
+        {
+          "title": "Youth & Education",
+          "description": "Providing mentorship, scholarships, and STEM/arts programming to equip the next generation of leaders with the tools they need to succeed."
+        },
+        {
+          "title": "Economic Empowerment",
+          "description": "Fostering Black-owned businesses through micro-grants, financial literacy workshops, and connecting entrepreneurs with vital resources."
+        },
+        {
+          "title": "Health & Wellness",
+          "description": "Championing health equity by funding community clinics, mental health services, and wellness programs tailored to specific community needs."
+        }
+      ]
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "description": "We'd love to hear from you. Whether you're interested in volunteering, partnering, or simply want to learn more, reach out and a member of our team will get back to you.",
+      "address": "123 Community Lane<br>Prosperity, USA 12345",
+      "email": "hello@amplify.org",
+      "form": {
+        "name": "Full Name",
+        "email": "Email",
+        "subject": "Subject",
+        "message": "Message",
+        "submit": "Send Message",
+        "success": "Thank you! Your message has been sent. We'll be in touch soon."
+      }
+    },
+    "footer": {
+      "copyright": "© 2025 Amplify. All rights reserved."
+    }
+  },
+  "fr": {
+    "nav": {
+      "about": "À Propos",
+      "initiatives": "Initiatives",
+      "contact": "Contact",
+      "donate": "Faire un Don"
+    },
+    "hero": {
+      "title1": "Autonomiser les Avenirs,",
+      "title2": "Bâtir l'Équité.",
+      "description": "Amplify se consacre à l'avancement culturel, éducatif et économique des communautés noires par le soutien direct et des partenariats stratégiques.",
+      "learnMore": "En Savoir Plus",
+      "getInvolved": "S'Impliquer"
+    },
+    "about": {
+      "title": "Notre Mission",
+      "paragraph1": "Nous croyons en un monde où chaque individu a l'opportunité de prospérer. Notre organisation a été fondée sur les principes d'équité, de justice et de communauté. Nous travaillons sans relâche pour démanteler les barrières systémiques et créer des voies tangibles vers le succès.",
+      "paragraph2": "Par une combinaison d'actions locales, de plaidoyer politique et de programmes communautaires, nous amplifions les voix qui doivent être entendues et investissons dans les acteurs du changement de demain."
+    },
+    "initiatives": {
+      "title": "Initiatives Actuelles",
+      "subtitle": "Nous concentrons nos efforts sur trois piliers fondamentaux pour créer un impact durable.",
+      "cards": [
+        {
+          "title": "Jeunesse & Éducation",
+          "description": "Offrir du mentorat, des bourses d'études et des programmes STEM/arts pour équiper la prochaine génération de leaders avec les outils nécessaires à leur réussite."
+        },
+        {
+          "title": "Autonomisation Économique",
+          "description": "Favoriser les entreprises appartenant à des Noirs par des micro-subventions, des ateliers de littératie financière et en connectant les entrepreneurs avec des ressources vitales."
+        },
+        {
+          "title": "Santé & Bien-être",
+          "description": "Promouvoir l'équité en santé en finançant des cliniques communautaires, des services de santé mentale et des programmes de bien-être adaptés aux besoins spécifiques de la communauté."
+        }
+      ]
+    },
+    "contact": {
+      "title": "Contactez-Nous",
+      "description": "Nous aimerions avoir de vos nouvelles. Que vous soyez intéressé par le bénévolat, un partenariat ou simplement pour en savoir plus, contactez-nous et un membre de notre équipe vous répondra.",
+      "address": "123 Rue Communauté<br>Prospérité, USA 12345",
+      "email": "hello@amplify.org",
+      "form": {
+        "name": "Nom Complet",
+        "email": "Courriel",
+        "subject": "Sujet",
+        "message": "Message",
+        "submit": "Envoyer le Message",
+        "success": "Merci ! Votre message a été envoyé. Nous vous contacterons bientôt."
+      }
+    },
+    "footer": {
+      "copyright": "© 2025 Amplify. Tous droits réservés."
+    }
+  }
+}

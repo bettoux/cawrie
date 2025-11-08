@@ -4,10 +4,47 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://your-connection-string-here';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sonnybettara_db_user:ojb8SH9VLIejQYYH@cluster0.ozgcwlr.mongodb.net/amplify?retryWrites=true&w=majority&appName=Cluster0';
+
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'image-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: function (req, file, cb) {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
 
 // MongoDB Connection
 mongoose.connect(MONGODB_URI)
@@ -43,7 +80,8 @@ const contentSchema = new mongoose.Schema({
   about: {
     title: String,
     paragraph1: String,
-    paragraph2: String
+    paragraph2: String,
+    image: { type: String, default: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Our+Community' }
   },
   initiatives: {
     title: String,
@@ -133,7 +171,8 @@ async function initializeDatabase() {
         about: {
           title: 'Our Mission',
           paragraph1: 'We believe in a world where every individual has the opportunity to thrive. Our organization was founded on the principles of equity, justice, and community. We work tirelessly to dismantle systemic barriers and create tangible pathways for success.',
-          paragraph2: 'Through a combination of grassroots action, policy advocacy, and community-led programs, we are amplifying the voices that need to be heard and investing in the change-makers of tomorrow.'
+          paragraph2: 'Through a combination of grassroots action, policy advocacy, and community-led programs, we are amplifying the voices that need to be heard and investing in the change-makers of tomorrow.',
+          image: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Our+Community'
         },
         initiatives: {
           title: 'Current Initiatives',
@@ -194,7 +233,8 @@ async function initializeDatabase() {
         about: {
           title: 'Notre Mission',
           paragraph1: "Nous croyons en un monde où chaque individu a l'opportunité de prospérer. Notre organisation a été fondée sur les principes d'équité, de justice et de communauté. Nous travaillons sans relâche pour démanteler les barrières systémiques et créer des voies tangibles vers le succès.",
-          paragraph2: "Par une combinaison d'actions locales, de plaidoyer politique et de programmes communautaires, nous amplifions les voix qui doivent être entendues et investissons dans les acteurs du changement de demain."
+          paragraph2: "Par une combinaison d'actions locales, de plaidoyer politique et de programmes communautaires, nous amplifions les voix qui doivent être entendues et investissons dans les acteurs du changement de demain.",
+          image: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Notre+Communauté'
         },
         initiatives: {
           title: 'Initiatives Actuelles',
@@ -529,6 +569,44 @@ app.post('/api/content', isAuthenticated, async (req, res) => {
   }
 });
 
+// API: Upload image
+app.post('/api/upload-image', isAuthenticated, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    
+    const imageUrl = '/uploads/' + req.file.filename;
+    res.json({ success: true, imageUrl: imageUrl });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// API: Delete image
+app.delete('/api/delete-image', isAuthenticated, async (req, res) => {
+  try {
+    const { imageUrl } = req.body;
+    
+    if (!imageUrl || !imageUrl.startsWith('/uploads/')) {
+      return res.status(400).json({ success: false, message: 'Invalid image URL' });
+    }
+    
+    const filePath = path.join(__dirname, 'public', imageUrl);
+    
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      res.json({ success: true, message: 'Image deleted successfully' });
+    } else {
+      res.status(404).json({ success: false, message: 'Image not found' });
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
@@ -536,5 +614,4 @@ app.listen(PORT, () => {
   console.log(`👥 User management: http://localhost:${PORT}/admin/users`);
   console.log(`💾 Database: ${MONGODB_URI}`);
   console.log(`🔑 Default credentials - Username: admin, Password: admin123`);
-
 });

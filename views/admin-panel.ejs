@@ -564,7 +564,16 @@
             });
             
             if (content) {
-                editor.root.innerHTML = content;
+                // Strip outer <p> tags if they exist to prevent nesting
+                let cleanContent = content.trim();
+                if (cleanContent.startsWith('<p>') && cleanContent.endsWith('</p>')) {
+                    // Check if there's only one <p> wrapper
+                    const pCount = (cleanContent.match(/<p>/g) || []).length;
+                    if (pCount === 1) {
+                        cleanContent = cleanContent.slice(3, -4);
+                    }
+                }
+                editor.root.innerHTML = cleanContent;
             }
             
             editors[id] = editor;
@@ -774,7 +783,15 @@
             Object.keys(editors).forEach(id => {
                 const hiddenField = document.getElementById(id);
                 if (hiddenField) {
-                    hiddenField.value = editors[id].root.innerHTML;
+                    let html = editors[id].root.innerHTML.trim();
+                    
+                    // Clean up: If Quill wrapped in <p>, keep it, but ensure consistency
+                    // Remove empty <p><br></p> that Quill sometimes adds
+                    if (html === '<p><br></p>') {
+                        html = '';
+                    }
+                    
+                    hiddenField.value = html;
                 }
             });
             

@@ -6,10 +6,21 @@
     <title>Admin Panel - Amplify</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Quill WYSIWYG Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .ql-editor { min-height: 120px; }
+        .ql-container { font-family: 'Inter', sans-serif; font-size: 14px; }
+        .ql-toolbar { background: #f9fafb; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }
+        .custom-color-section { 
+            padding: 12px; 
+            border-top: 1px solid #e5e7eb; 
+            background: white;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -68,6 +79,7 @@
             <form id="content-form" class="space-y-6">
                 <!-- English Content -->
                 <div id="content-en" class="tab-content active space-y-6">
+                    <!-- Navigation -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Navigation</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,6 +106,7 @@
                         </div>
                     </div>
 
+                    <!-- Hero Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Hero Section</h2>
                         <div class="space-y-4">
@@ -108,9 +121,9 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                <textarea name="en.hero.description" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.hero.description %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description (Rich Text)</label>
+                                <div id="editor-en-hero-description"></div>
+                                <input type="hidden" name="en.hero.description" id="en-hero-description">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -127,6 +140,7 @@
                         </div>
                     </div>
 
+                    <!-- About Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">About Section</h2>
                         <div class="space-y-4">
@@ -136,18 +150,19 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraph 1</label>
-                                <textarea name="en.about.paragraph1" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.about.paragraph1 %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Paragraph 1 (Rich Text)</label>
+                                <div id="editor-en-about-paragraph1"></div>
+                                <input type="hidden" name="en.about.paragraph1" id="en-about-paragraph1">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraph 2</label>
-                                <textarea name="en.about.paragraph2" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.about.paragraph2 %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Paragraph 2 (Rich Text)</label>
+                                <div id="editor-en-about-paragraph2"></div>
+                                <input type="hidden" name="en.about.paragraph2" id="en-about-paragraph2">
                             </div>
                         </div>
                     </div>
 
+                    <!-- Initiatives Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Initiatives Section</h2>
                         <div class="space-y-4">
@@ -172,9 +187,9 @@
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                        <textarea name="en.initiatives.cards[<%= index %>].description" rows="2" 
-                                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= card.description %></textarea>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Description (Rich Text)</label>
+                                        <div id="editor-en-initiatives-cards-<%= index %>"></div>
+                                        <input type="hidden" name="en.initiatives.cards[<%= index %>].description" id="en-initiatives-cards-<%= index %>">
                                     </div>
                                 </div>
                             </div>
@@ -182,6 +197,7 @@
                         </div>
                     </div>
 
+                    <!-- Contact Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Contact Section</h2>
                         <div class="space-y-4">
@@ -191,13 +207,13 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                <textarea name="en.contact.description" rows="2" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.contact.description %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description (Rich Text)</label>
+                                <div id="editor-en-contact-description"></div>
+                                <input type="hidden" name="en.contact.description" id="en-contact-description">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Address (HTML allowed)</label>
                                     <textarea name="en.contact.address" rows="2" 
                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.en.contact.address %></textarea>
                                 </div>
@@ -207,7 +223,7 @@
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                 </div>
                             </div>
-                            <div class="border-t pt-4 mt-4">
+                            <div class="border-t pt-4">
                                 <h3 class="font-medium text-gray-900 mb-3">Form Labels</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
@@ -245,6 +261,7 @@
                         </div>
                     </div>
 
+                    <!-- Footer -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Footer</h2>
                         <div>
@@ -255,8 +272,9 @@
                     </div>
                 </div>
 
-                <!-- French Content (Similar structure) -->
+                <!-- French Content -->
                 <div id="content-fr" class="tab-content space-y-6">
+                    <!-- Navigation -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Navigation</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -283,6 +301,7 @@
                         </div>
                     </div>
 
+                    <!-- Hero Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Section Héro</h2>
                         <div class="space-y-4">
@@ -297,9 +316,9 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                <textarea name="fr.hero.description" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.hero.description %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description (Texte Enrichi)</label>
+                                <div id="editor-fr-hero-description"></div>
+                                <input type="hidden" name="fr.hero.description" id="fr-hero-description">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -316,6 +335,7 @@
                         </div>
                     </div>
 
+                    <!-- About Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Section À Propos</h2>
                         <div class="space-y-4">
@@ -325,18 +345,19 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraphe 1</label>
-                                <textarea name="fr.about.paragraph1" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.about.paragraph1 %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Paragraphe 1 (Texte Enrichi)</label>
+                                <div id="editor-fr-about-paragraph1"></div>
+                                <input type="hidden" name="fr.about.paragraph1" id="fr-about-paragraph1">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Paragraphe 2</label>
-                                <textarea name="fr.about.paragraph2" rows="3" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.about.paragraph2 %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Paragraphe 2 (Texte Enrichi)</label>
+                                <div id="editor-fr-about-paragraph2"></div>
+                                <input type="hidden" name="fr.about.paragraph2" id="fr-about-paragraph2">
                             </div>
                         </div>
                     </div>
 
+                    <!-- Initiatives Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Section Initiatives</h2>
                         <div class="space-y-4">
@@ -361,9 +382,9 @@
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                        <textarea name="fr.initiatives.cards[<%= index %>].description" rows="2" 
-                                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= card.description %></textarea>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Description (Texte Enrichi)</label>
+                                        <div id="editor-fr-initiatives-cards-<%= index %>"></div>
+                                        <input type="hidden" name="fr.initiatives.cards[<%= index %>].description" id="fr-initiatives-cards-<%= index %>">
                                     </div>
                                 </div>
                             </div>
@@ -371,6 +392,7 @@
                         </div>
                     </div>
 
+                    <!-- Contact Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Section Contact</h2>
                         <div class="space-y-4">
@@ -380,13 +402,13 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                <textarea name="fr.contact.description" rows="2" 
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.contact.description %></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description (Texte Enrichi)</label>
+                                <div id="editor-fr-contact-description"></div>
+                                <input type="hidden" name="fr.contact.description" id="fr-contact-description">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Adresse (HTML autorisé)</label>
                                     <textarea name="fr.contact.address" rows="2" 
                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><%= content.fr.contact.address %></textarea>
                                 </div>
@@ -396,7 +418,7 @@
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                 </div>
                             </div>
-                            <div class="border-t pt-4 mt-4">
+                            <div class="border-t pt-4">
                                 <h3 class="font-medium text-gray-900 mb-3">Étiquettes du Formulaire</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
@@ -434,6 +456,7 @@
                         </div>
                     </div>
 
+                    <!-- Footer -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Pied de Page</h2>
                         <div>
@@ -445,7 +468,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex justify-end space-x-4">
+                <div class="flex justify-end space-x-4 pb-8">
                     <button type="button" onclick="window.location.reload()" 
                             class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                         Cancel
@@ -460,6 +483,140 @@
     </div>
 
     <script>
+        const editors = {};
+
+        // Initialize Quill editor with custom color picker
+        function initEditor(id, content) {
+            const container = document.getElementById(`editor-${id}`);
+            if (!container) return;
+
+            const editor = new Quill(container, {
+                theme: 'snow',
+                modules: {
+                    toolbar: {
+                        container: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'align': [] }],
+                            ['link'],
+                            ['clean']
+                        ],
+                        handlers: {
+                            'color': function(value) {
+                                if (value === 'custom') {
+                                    customColorHandler(this.quill, 'color');
+                                } else {
+                                    this.quill.format('color', value);
+                                }
+                            },
+                            'background': function(value) {
+                                if (value === 'custom') {
+                                    customColorHandler(this.quill, 'background');
+                                } else {
+                                    this.quill.format('background', value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (content) {
+                editor.root.innerHTML = content;
+            }
+            
+            editors[id] = editor;
+
+            // Add custom color input below toolbar
+            addCustomColorPicker(container.parentElement, id);
+            
+            return editor;
+        }
+
+        // Add custom color picker UI
+        function addCustomColorPicker(container, editorId) {
+            const customSection = document.createElement('div');
+            customSection.className = 'custom-color-section';
+            customSection.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <label class="text-xs font-medium text-gray-700">Custom Color:</label>
+                    <input type="color" id="color-picker-${editorId}" class="h-8 w-16 cursor-pointer border border-gray-300 rounded" />
+                    <input type="text" id="hex-input-${editorId}" placeholder="#000000" maxlength="7" 
+                           class="w-24 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-purple-500" />
+                    <button type="button" onclick="applyCustomColor('${editorId}', 'color')" 
+                            class="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700">
+                        Text Color
+                    </button>
+                    <button type="button" onclick="applyCustomColor('${editorId}', 'background')" 
+                            class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+                        Background
+                    </button>
+                </div>
+            `;
+            
+            container.insertBefore(customSection, container.querySelector('.ql-container'));
+
+            // Sync color picker with hex input
+            const colorPicker = document.getElementById(`color-picker-${editorId}`);
+            const hexInput = document.getElementById(`hex-input-${editorId}`);
+            
+            colorPicker.addEventListener('input', (e) => {
+                hexInput.value = e.target.value;
+            });
+            
+            hexInput.addEventListener('input', (e) => {
+                const hex = e.target.value;
+                if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                    colorPicker.value = hex;
+                }
+            });
+        }
+
+        // Apply custom color to selected text
+        window.applyCustomColor = function(editorId, type) {
+            const hexInput = document.getElementById(`hex-input-${editorId}`);
+            const color = hexInput.value;
+            
+            if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
+                alert('Please enter a valid hex color (e.g., #FF5733)');
+                return;
+            }
+            
+            const editor = editors[editorId];
+            const range = editor.getSelection();
+            
+            if (range && range.length > 0) {
+                editor.format(type, color);
+            } else {
+                alert('Please select some text first');
+            }
+        };
+
+        // Initialize all editors when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // English editors
+            initEditor('en-hero-description', `<%= content.en.hero.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('en-about-paragraph1', `<%= content.en.about.paragraph1.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('en-about-paragraph2', `<%= content.en.about.paragraph2.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('en-contact-description', `<%= content.en.contact.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            
+            <% content.en.initiatives.cards.forEach((card, index) => { %>
+            initEditor('en-initiatives-cards-<%= index %>', `<%= card.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            <% }); %>
+
+            // French editors
+            initEditor('fr-hero-description', `<%= content.fr.hero.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('fr-about-paragraph1', `<%= content.fr.about.paragraph1.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('fr-about-paragraph2', `<%= content.fr.about.paragraph2.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            initEditor('fr-contact-description', `<%= content.fr.contact.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            
+            <% content.fr.initiatives.cards.forEach((card, index) => { %>
+            initEditor('fr-initiatives-cards-<%= index %>', `<%= card.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
+            <% }); %>
+        });
+
         function switchLanguage(lang) {
             document.querySelectorAll('.language-tab').forEach(tab => {
                 tab.classList.remove('active', 'border-purple-600', 'text-purple-600');
@@ -479,18 +636,23 @@
         document.getElementById('content-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // Update hidden fields with editor content
+            Object.keys(editors).forEach(id => {
+                const hiddenField = document.getElementById(id);
+                if (hiddenField) {
+                    hiddenField.value = editors[id].root.innerHTML;
+                }
+            });
+            
             const formData = new FormData(e.target);
             const data = { en: {}, fr: {} };
             
-            // Helper function to set nested value
             function setNestedValue(obj, path, value) {
                 const keys = path.split('.');
                 let current = obj;
                 
                 for (let i = 0; i < keys.length - 1; i++) {
                     let key = keys[i];
-                    
-                    // Check if this is an array index pattern like "cards[0]"
                     const arrayMatch = key.match(/^(.+)\[(\d+)\]$/);
                     
                     if (arrayMatch) {
@@ -504,12 +666,10 @@
                     }
                 }
                 
-                // Set the final value
                 const lastKey = keys[keys.length - 1];
                 current[lastKey] = value;
             }
             
-            // Process all form fields
             formData.forEach((value, key) => {
                 setNestedValue(data, key, value);
             });

@@ -721,8 +721,13 @@
             });
             
             if (content) {
+                // Decode any HTML entities that might have been escaped
+                const textarea = document.createElement('textarea');
+                textarea.innerHTML = content;
+                let cleanContent = textarea.value;
+                
                 // Strip outer <p> tags if they exist to prevent nesting
-                let cleanContent = content.trim();
+                cleanContent = cleanContent.trim();
                 if (cleanContent.startsWith('<p>') && cleanContent.endsWith('</p>')) {
                     // Check if there's only one <p> wrapper
                     const pCount = (cleanContent.match(/<p>/g) || []).length;
@@ -802,30 +807,30 @@
 
         // Initialize all editors when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            // English editors
-            initEditor('en-hero-description', `<%= content.en.hero.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('en-about-paragraph1', `<%= content.en.about.paragraph1.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('en-about-paragraph2', `<%= content.en.about.paragraph2.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('en-contact-description', `<%= content.en.contact.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            
-            <% content.en.initiatives.cards.forEach((card, index) => { %>
-            initEditor('en-initiatives-cards-<%= index %>', `<%= card.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            <% }); %>
+        // English editors
+        initEditor('en-hero-description', `<%- content.en.hero.description %>`);
+        initEditor('en-about-paragraph1', `<%- content.en.about.paragraph1 %>`);
+        initEditor('en-about-paragraph2', `<%- content.en.about.paragraph2 %>`);
+        initEditor('en-contact-description', `<%- content.en.contact.description %>`);
+        
+        <% content.en.initiatives.cards.forEach((card, index) => { %>
+        initEditor('en-initiatives-cards-<%= index %>', `<%- card.description %>`);
+        <% }); %>
 
-            // French editors
-            initEditor('fr-hero-description', `<%= content.fr.hero.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('fr-about-paragraph1', `<%= content.fr.about.paragraph1.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('fr-about-paragraph2', `<%= content.fr.about.paragraph2.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            initEditor('fr-contact-description', `<%= content.fr.contact.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            
-            <% content.fr.initiatives.cards.forEach((card, index) => { %>
-            initEditor('fr-initiatives-cards-<%= index %>', `<%= card.description.replace(/"/g, '&quot;').replace(/\n/g, ' ') %>`);
-            <% }); %>
+        // French editors
+        initEditor('fr-hero-description', `<%- content.fr.hero.description %>`);
+        initEditor('fr-about-paragraph1', `<%- content.fr.about.paragraph1 %>`);
+        initEditor('fr-about-paragraph2', `<%- content.fr.about.paragraph2 %>`);
+        initEditor('fr-contact-description', `<%- content.fr.contact.description %>`);
+        
+        <% content.fr.initiatives.cards.forEach((card, index) => { %>
+        initEditor('fr-initiatives-cards-<%= index %>', `<%- card.description %>`);
+        <% }); %>
 
-            // Setup image upload handlers
-            setupImageUpload('en-about-image');
-            setupImageUpload('fr-about-image');
-        });
+        // Setup image upload handlers
+        setupImageUpload('en-about-image');
+        setupImageUpload('fr-about-image');
+    });
 
         function setupImageUpload(fieldId) {
             const input = document.getElementById('upload-' + fieldId);

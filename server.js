@@ -83,6 +83,10 @@ const contentSchema = new mongoose.Schema({
     paragraph2: String,
     image: { type: String, default: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Our+Community' }
   },
+  featured: {
+  enabled: { type: Boolean, default: false },
+  initiativeIndex: { type: Number, default: 0 }
+  },
   initiatives: {
     title: String,
     subtitle: String,

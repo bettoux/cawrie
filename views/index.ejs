@@ -154,7 +154,12 @@
                                     <%- featuredInitiative.description %>
                                 </div>
                                 <div class="mt-8">
-                                    <a href="<%= t.featured.buttonLink || '#initiatives' %>" 
+                                    <% 
+                                    const featuredLink = t.featured.buttonLink || '#initiatives';
+                                    const isExternalLink = featuredLink.startsWith('http://') || featuredLink.startsWith('https://');
+                                    %>
+                                    <a href="<%= featuredLink %>" 
+                                    <% if (isExternalLink) { %>target="_blank" rel="noopener noreferrer"<% } %>
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-purple-600 hover:bg-brand-purple-700 transition-all shadow-md hover:shadow-lg">
                                         <%= t.featured.buttonText || (lang === 'en' ? 'Learn More' : 'En Savoir Plus') %>
                                         <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -232,7 +237,12 @@
                 <h3 class="mt-4 text-xl font-semibold text-gray-900"><%= card.title %></h3>
                 <div class="mt-2 text-base text-gray-600 flex-grow"><%- card.description %></div>
                 <div class="mt-6">
-                    <a href="<%= card.buttonLink || '#contact' %>" 
+                    <% 
+                    const cardLink = card.buttonLink || '#contact';
+                    const isCardExternal = cardLink.startsWith('http://') || cardLink.startsWith('https://');
+                    %>
+                    <a href="<%= cardLink %>" 
+                    <% if (isCardExternal) { %>target="_blank" rel="noopener noreferrer"<% } %>
                     class="inline-flex items-center text-brand-purple-600 hover:text-brand-purple-700 font-medium transition-colors">
                         <%= card.buttonText || (lang === 'en' ? 'Learn More' : 'En Savoir Plus') %>
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

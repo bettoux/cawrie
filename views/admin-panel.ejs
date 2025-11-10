@@ -140,6 +140,40 @@
                         </div>
                     </div>
 
+
+                    <!-- Featured Initiatives Section -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Featured Initiative</h2>
+                        <p class="text-sm text-gray-600 mb-4">Showcase one initiative in a prominent section right after the hero.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" 
+                                    id="en-featured-enabled" 
+                                    name="en.featured.enabled" 
+                                    value="true"
+                                    <%= content.en.featured && content.en.featured.enabled ? 'checked' : '' %>
+                                    class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                <label for="en-featured-enabled" class="ml-2 block text-sm font-medium text-gray-700">
+                                    Enable Featured Initiative Section
+                                </label>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Select Initiative to Feature</label>
+                                <select name="en.featured.initiativeIndex" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    <% content.en.initiatives.cards.forEach((card, index) => { %>
+                                    <option value="<%= index %>" <%= content.en.featured && content.en.featured.initiativeIndex === index ? 'selected' : '' %>>
+                                        <%= card.title %>
+                                    </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                     <!-- About Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">About Section</h2>
@@ -354,6 +388,40 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Featured Initiatives Section (French) -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">Initiative en Vedette</h2>
+                        <p class="text-sm text-gray-600 mb-4">Mettez en valeur une initiative dans une section proéminente juste après le héro.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" 
+                                    id="fr-featured-enabled" 
+                                    name="fr.featured.enabled" 
+                                    value="true"
+                                    <%= content.fr.featured && content.fr.featured.enabled ? 'checked' : '' %>
+                                    class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded-lg">
+                                <label for="fr-featured-enabled" class="ml-2 block text-sm font-medium text-gray-700">
+                                    Activer la Section Initiative en Vedette
+                                </label>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sélectionner l'Initiative à Mettre en Vedette</label>
+                                <select name="fr.featured.initiativeIndex" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    <% content.fr.initiatives.cards.forEach((card, index) => { %>
+                                    <option value="<%= index %>" <%= content.fr.featured && content.fr.featured.initiativeIndex === index ? 'selected' : '' %>>
+                                        <%= card.title %>
+                                    </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
 
                     <!-- About Section -->
                     <div class="bg-white rounded-lg shadow p-6">
@@ -776,7 +844,95 @@
             document.getElementById('content-' + lang).classList.add('active');
         }
 
+
         document.getElementById('content-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Update hidden fields with editor content
+            Object.keys(editors).forEach(id => {
+                const hiddenField = document.getElementById(id);
+                if (hiddenField) {
+                    let html = editors[id].root.innerHTML.trim();
+                    
+                    if (html === '<p><br></p>') {
+                        html = '';
+                    }
+                    
+                    hiddenField.value = html;
+                }
+            });
+            
+            const formData = new FormData(e.target);
+            const data = { en: {}, fr: {} };
+            
+            function setNestedValue(obj, path, value) {
+                const keys = path.split('.');
+                let current = obj;
+                
+                for (let i = 0; i < keys.length - 1; i++) {
+                    let key = keys[i];
+                    const arrayMatch = key.match(/^(.+)\[(\d+)\]$/);
+                    
+                    if (arrayMatch) {
+                        const [, arrayName, index] = arrayMatch;
+                        if (!current[arrayName]) current[arrayName] = [];
+                        if (!current[arrayName][index]) current[arrayName][index] = {};
+                        current = current[arrayName][index];
+                    } else {
+                        if (!current[key]) current[key] = {};
+                        current = current[key];
+                    }
+                }
+                
+                const lastKey = keys[keys.length - 1];
+                current[lastKey] = value;
+            }
+            
+            // Handle checkboxes specially
+            // Set featured.enabled to false by default
+            data.en.featured = { enabled: false, initiativeIndex: 0 };
+            data.fr.featured = { enabled: false, initiativeIndex: 0 };
+            
+            formData.forEach((value, key) => {
+                if (key.includes('featured.enabled')) {
+                    // Checkbox is checked if present
+                    const lang = key.startsWith('en.') ? 'en' : 'fr';
+                    data[lang].featured.enabled = true;
+                } else if (key.includes('featured.initiativeIndex')) {
+                    const lang = key.startsWith('en.') ? 'en' : 'fr';
+                    data[lang].featured.initiativeIndex = parseInt(value, 10);
+                } else {
+                    setNestedValue(data, key, value);
+                }
+            });
+            
+            try {
+                const response = await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const successMsg = document.getElementById('success-message');
+                    successMsg.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    setTimeout(() => {
+                        successMsg.classList.add('hidden');
+                    }, 5000);
+                } else {
+                    alert('Failed to save changes: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error saving changes: ' + error.message);
+            }
+        });
+
+        //replace this
+        /*document.getElementById('content-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             // Update hidden fields with editor content
@@ -848,7 +1004,7 @@
             } catch (error) {
                 alert('Error saving changes: ' + error.message);
             }
-        });
+        });*/
     </script>
 </body>
 </html>

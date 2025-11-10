@@ -142,6 +142,8 @@
 
 
                     <!-- Featured Initiatives Section -->
+                    <!-- Featured Initiatives Section -->
+                    <!-- Featured Initiatives Section -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Featured Initiative</h2>
                         <p class="text-sm text-gray-600 mb-4">Showcase one initiative in a prominent section right after the hero.</p>
@@ -167,6 +169,25 @@
                                     </option>
                                     <% }); %>
                                 </select>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Button Text</label>
+                                    <input type="text" 
+                                        name="en.featured.buttonText" 
+                                        value="<%= content.en.featured && content.en.featured.buttonText ? content.en.featured.buttonText : 'Learn More' %>" 
+                                        placeholder="Learn More"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Button Link</label>
+                                    <input type="text" 
+                                        name="en.featured.buttonLink" 
+                                        value="<%= content.en.featured && content.en.featured.buttonLink ? content.en.featured.buttonLink : '#initiatives' %>" 
+                                        placeholder="#initiatives or https://example.com"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    <p class="text-xs text-gray-500 mt-1">Use #section for internal links or full URL for external links</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -231,6 +252,7 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             
+                            
                             <% content.en.initiatives.cards.forEach((card, index) => { %>
                             <div class="border-t pt-4 mt-4">
                                 <h3 class="font-medium text-gray-900 mb-3">Initiative <%= index + 1 %></h3>
@@ -238,16 +260,38 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
                                         <input type="text" name="en.initiatives.cards[<%= index %>].title" value="<%= card.title %>" 
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Description (Rich Text)</label>
                                         <div id="editor-en-initiatives-cards-<%= index %>"></div>
                                         <input type="hidden" name="en.initiatives.cards[<%= index %>].description" id="en-initiatives-cards-<%= index %>">
                                     </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Button Text</label>
+                                            <input type="text" 
+                                                name="en.initiatives.cards[<%= index %>].buttonText" 
+                                                value="<%= card.buttonText || 'Learn More' %>" 
+                                                placeholder="Learn More"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Button Link</label>
+                                            <input type="text" 
+                                                name="en.initiatives.cards[<%= index %>].buttonLink" 
+                                                value="<%= card.buttonLink || '#contact' %>" 
+                                                placeholder="#contact or https://example.com"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                            <p class="text-xs text-gray-500 mt-1">Use #section for internal links or full URL for external</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <% }); %>
+
+
+
                         </div>
                     </div>
 
@@ -391,6 +435,8 @@
 
 
                     <!-- Featured Initiatives Section (French) -->
+                    <!-- Featured Initiatives Section (French) -->
+                    <!-- Featured Initiatives Section (French) -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-xl font-semibold mb-4">Initiative en Vedette</h2>
                         <p class="text-sm text-gray-600 mb-4">Mettez en valeur une initiative dans une section proéminente juste après le héro.</p>
@@ -416,6 +462,25 @@
                                     </option>
                                     <% }); %>
                                 </select>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Texte du Bouton</label>
+                                    <input type="text" 
+                                        name="fr.featured.buttonText" 
+                                        value="<%= content.fr.featured && content.fr.featured.buttonText ? content.fr.featured.buttonText : 'En Savoir Plus' %>" 
+                                        placeholder="En Savoir Plus"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Lien du Bouton</label>
+                                    <input type="text" 
+                                        name="fr.featured.buttonLink" 
+                                        value="<%= content.fr.featured && content.fr.featured.buttonLink ? content.fr.featured.buttonLink : '#initiatives' %>" 
+                                        placeholder="#initiatives ou https://exemple.com"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    <p class="text-xs text-gray-500 mt-1">Utilisez #section pour les liens internes ou URL complète pour les liens externes</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -480,6 +545,7 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             
+
                             <% content.fr.initiatives.cards.forEach((card, index) => { %>
                             <div class="border-t pt-4 mt-4">
                                 <h3 class="font-medium text-gray-900 mb-3">Initiative <%= index + 1 %></h3>
@@ -487,16 +553,39 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
                                         <input type="text" name="fr.initiatives.cards[<%= index %>].title" value="<%= card.title %>" 
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Description (Texte Enrichi)</label>
                                         <div id="editor-fr-initiatives-cards-<%= index %>"></div>
                                         <input type="hidden" name="fr.initiatives.cards[<%= index %>].description" id="fr-initiatives-cards-<%= index %>">
                                     </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Texte du Bouton</label>
+                                            <input type="text" 
+                                                name="fr.initiatives.cards[<%= index %>].buttonText" 
+                                                value="<%= card.buttonText || 'En Savoir Plus' %>" 
+                                                placeholder="En Savoir Plus"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Lien du Bouton</label>
+                                            <input type="text" 
+                                                name="fr.initiatives.cards[<%= index %>].buttonLink" 
+                                                value="<%= card.buttonLink || '#contact' %>" 
+                                                placeholder="#contact ou https://exemple.com"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                            <p class="text-xs text-gray-500 mt-1">Utilisez #section pour les liens internes ou URL complète pour externes</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <% }); %>
+
+
+
+
                         </div>
                     </div>
 

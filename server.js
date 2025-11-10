@@ -85,14 +85,18 @@ const contentSchema = new mongoose.Schema({
   },
   featured: {
   enabled: { type: Boolean, default: false },
-  initiativeIndex: { type: Number, default: 0 }
+  initiativeIndex: { type: Number, default: 0 },
+  buttonText: { type: String, default: 'Learn More' },
+  buttonLink: { type: String, default: '#initiatives' }
   },
   initiatives: {
     title: String,
     subtitle: String,
     cards: [{
       title: String,
-      description: String
+      description: String,
+      buttonText: { type: String, default: 'Learn More' },
+      buttonLink: { type: String, default: '#contact' }
     }]
   },
   contact: {
@@ -178,21 +182,33 @@ async function initializeDatabase() {
           paragraph2: 'Through a combination of grassroots action, policy advocacy, and community-led programs, we are amplifying the voices that need to be heard and investing in the change-makers of tomorrow.',
           image: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Our+Community'
         },
+        featured: {
+          enabled: false,
+          initiativeIndex: 0,
+          buttonText: { type: String, default: 'Learn More About Our Initiatives' },
+          buttonLink: { type: String, default: '#initiatives' }
+        },
         initiatives: {
           title: 'Current Initiatives',
           subtitle: 'We focus our efforts on three core pillars to create lasting impact.',
           cards: [
             {
               title: 'Youth & Education',
-              description: 'Providing mentorship, scholarships, and STEM/arts programming to equip the next generation of leaders with the tools they need to succeed.'
+              description: 'Providing mentorship, scholarships, and STEM/arts programming to equip the next generation of leaders with the tools they need to succeed.',
+              buttonText: { type: String, default: 'Learn More' },
+              buttonLink: { type: String, default: '#contact' }
             },
             {
               title: 'Economic Empowerment',
-              description: 'Fostering Black-owned businesses through micro-grants, financial literacy workshops, and connecting entrepreneurs with vital resources.'
+              description: 'Fostering Black-owned businesses through micro-grants, financial literacy workshops, and connecting entrepreneurs with vital resources.',
+              buttonText: { type: String, default: 'Learn More' },
+              buttonLink: { type: String, default: '#contact' }
             },
             {
               title: 'Health & Wellness',
-              description: 'Championing health equity by funding community clinics, mental health services, and wellness programs tailored to specific community needs.'
+              description: 'Championing health equity by funding community clinics, mental health services, and wellness programs tailored to specific community needs.',
+              buttonText: { type: String, default: 'Learn More' },
+              buttonLink: { type: String, default: '#contact' }
             }
           ]
         },
@@ -240,21 +256,33 @@ async function initializeDatabase() {
           paragraph2: "Par une combinaison d'actions locales, de plaidoyer politique et de programmes communautaires, nous amplifions les voix qui doivent être entendues et investissons dans les acteurs du changement de demain.",
           image: 'https://placehold.co/600x400/F5F3FF/7C3AED?text=Notre+Communauté'
         },
+        featured: {
+          enabled: false,
+          initiativeIndex: 0,
+          buttonText: { type: String, default: 'En Savoir Plus Sur Nos Initiatives' },
+          buttonLink: { type: String, default: '#initiatives' }
+        },
         initiatives: {
           title: 'Initiatives Actuelles',
           subtitle: 'Nous concentrons nos efforts sur trois piliers fondamentaux pour créer un impact durable.',
           cards: [
             {
               title: 'Jeunesse & Éducation',
-              description: 'Offrir du mentorat, des bourses d\'études et des programmes STEM/arts pour équiper la prochaine génération de leaders avec les outils nécessaires à leur réussite.'
+              description: 'Offrir du mentorat, des bourses d\'études et des programmes STEM/arts pour équiper la prochaine génération de leaders avec les outils nécessaires à leur réussite.',
+              buttonText: { type: String, default: 'En Savoir Plus' },
+              buttonLink: { type: String, default: '#contact' }
             },
             {
               title: 'Autonomisation Économique',
-              description: 'Favoriser les entreprises appartenant à des Noirs par des micro-subventions, des ateliers de littératie financière et en connectant les entrepreneurs avec des ressources vitales.'
+              description: 'Favoriser les entreprises appartenant à des Noirs par des micro-subventions, des ateliers de littératie financière et en connectant les entrepreneurs avec des ressources vitales.',
+              buttonText: { type: String, default: 'En Savoir Plus' },
+              buttonLink: { type: String, default: '#contact' }
             },
             {
               title: 'Santé & Bien-être',
-              description: "Promouvoir l'équité en santé en finançant des cliniques communautaires, des services de santé mentale et des programmes de bien-être adaptés aux besoins spécifiques de la communauté."
+              description: "Promouvoir l'équité en santé en finançant des cliniques communautaires, des services de santé mentale et des programmes de bien-être adaptés aux besoins spécifiques de la communauté.",
+              buttonText: { type: String, default: 'En Savoir Plus' },
+              buttonLink: { type: String, default: '#contact' }
             }
           ]
         },
